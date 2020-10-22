@@ -1,26 +1,28 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import ScreenRoot from "./screens/Root";
+import {connect} from "react-redux";
+import {initializeApp} from "./redux/reducers/initialized";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+
+    componentDidMount() {
+        if (!this.props.isAuth) this.props.initializeApp()
+    }
+
+    render() {
+        return (
+            <ScreenRoot/>
+        );
+    }
 }
 
-export default App;
+let mapStateToProps = state => {
+    return {
+        isInitialized: state.initializedApp.isInitialized,
+        isAuth: state.authorization.isAuth
+    }
+}
+
+export default connect(mapStateToProps, {initializeApp})(App);
+
